@@ -12,4 +12,4 @@ curl -X POST -H "Content-Type:application/json" -d '{"student_id":1, "course_id"
 
 curl -X PATCH -H "Content-Type:application/json" -d '{"grad_year":2023}' localhost:5555/students/11
 
-curl -X DELETE localhost:5555/students/11
+curl -X DELETE localhost:5555/students/9
