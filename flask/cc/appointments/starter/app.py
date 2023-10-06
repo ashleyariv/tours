@@ -20,7 +20,62 @@ db.init_app(app)
 def index():
     return "doctor/patient"
 
+@app.get('/doctors')
+def get_doctors():
+    doctor_list = Doctor.query.all()
+    doctor_json = []
+    for doctor in doctor_list:
+        doctor_json.append(doctor.to_dict(rules = ('-appointment_list',))) 
+    return make_response(jsonify(doctor_json), 200)
 
+@app.get('/doctors/<int:id>')
+def doctors_by_id(id):
+    doctor = Doctor.query.filter(Doctor.id == id).first()
+    if not doctor:
+        return make_response(jsonify({'Error': "Doctor does not exist."}), 404)
+    return make_response(jsonify(doctor.to_dict(rules = ('-appointment_list.doctor_id', '-appointment_list.patient_id'))), 200)
+
+@app.get('/patients/<int:id>')
+def patients_by_id(id):
+    patient = Patient.query.filter(Patient.id == id).first()
+    if not patient:
+        return make_response(jsonify({'Error': 'Patient does not exit.'}), 404)
+    return make_response(jsonify(patient.to_dict(rules = ('-appointment_list',))), 200)
+
+@app.delete('/appointments/<int:id>')
+def delete_appointment(id):
+    appointment = Appointment.query.filter(Appointment.id == id).first()
+    if not appointment:
+        return make_response(jsonify({'Error': 'Appointment does not exist.'}), 404)
+    return make_response(jsonify({}),201)
+
+@app.post('/doctors')
+def new_doctor():
+    data = request.json
+    new_doctor = Doctor(name = data.get('name'), specialty = data.get('specialty'))
+    db.session.add(new_doctor)
+    db.session.commit()
+    return make_response(new_doctor.to_dict(rules = ('-appointment_list',)), 201)
+
+@app.post('/appointments')
+def new_appointment():
+    data = request.json
+    new_appointment = Appointment(day = data.get('day'), doctor_id = data.get('doctor_id'), patient_id = data.get('patient_id'))
+    db.session.add(new_appointment)
+    db.session.commit()
+    return make_response(jsonify(new_appointment.to_dict(rules = ('-day', '-doctor_id', '-patient_id'))), 201)
+
+@app.patch('/patients/<int:id>')
+def update_patient(id):
+    patient = Patient.query.filter(Patient.id == id).first()
+    if not patient:
+        return make_response(jsonify({'Error': 'Patient does not exist.'}))
+    data = request.json
+    for key in data:
+        setattr(patient, key, data[key])
+    db.session.add(patient)
+    db.session.commit()
+    return make_response(jsonify(patient.to_dict(rules = ('-appointment_list',))), 201)
 
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
