@@ -4,8 +4,8 @@ from app import app
 from models import db  # models go here
 from faker import Faker
 from random import randint, choice, choices
-from models import Doctor, Patient, Appointment 
-import string, datetime
+from models import Doctor, Patient, Appointment
+
 
 fake = Faker()
 
@@ -16,7 +16,14 @@ if __name__ == "__main__":
         Appointment.query.delete()
         doctors: list[Doctor] = []
         for _ in range(10):
-            doctors.append(Doctor(name="Dr. " + fake.name(), specialty=choice(['Humour imbalance', 'Blood Letting', 'Tranquilization'])))
+            doctors.append(
+                Doctor(
+                    name="Dr. " + fake.name(),
+                    specialty=choice(
+                        ["Humour imbalance", "Blood Letting", "Tranquilization"]
+                    ),
+                )
+            )
 
         db.session.add_all(doctors)
         db.session.commit()
@@ -30,9 +37,10 @@ if __name__ == "__main__":
         appointments = []
 
         for _ in range(10):
+            weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
             appointments.append(
                 Appointment(
-                    date=fake.date_between_dates(date_start=datetime.date(2023, 8, 23), date_end=datetime.date(2024, 7, 11)),
+                    day=choice(weekdays),
                     doctor_id=choice(doctors).id,
                     patient_id=choice(patients).id,
                 )

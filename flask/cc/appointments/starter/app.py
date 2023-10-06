@@ -3,7 +3,7 @@
 from flask import Flask, make_response, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-
+import datetime
 from models import db, Doctor, Patient, Appointment
 
 app = Flask(__name__)
@@ -19,23 +19,6 @@ db.init_app(app)
 @app.get("/")
 def index():
     return "doctor/patient"
-
-@app.get('/doctors')
-def get_doctors():
-    return {}
-
-@app.get('/doctors/<int:id>')
-def get_doctor_by_id(id):
-    return {}
-
-@app.post('/doctors')
-def post_doctor():
-    return {}
-
-@app.patch('/patients/<int:id>')
-def patch_patients(id):
-    return {}
-        
 
 
 

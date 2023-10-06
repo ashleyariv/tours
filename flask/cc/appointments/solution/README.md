@@ -6,26 +6,27 @@
     - specialty (string, not null)
  - Appointment
     - id         (integer, primary key)
-    - date       (datetime, not null)
+    - day        (string, not null)
     - doctor_id  (integer, not null)
     - patient_id (integer, not null)
  - Patient
     - id   (primary key)
     - name (string, not null)
-    - 
 # Validation
 
   - Doctor
     - names must start with 'Dr.'
   - Appointment
-    - date must be in the future
+    - day must be between Monday and Friday
     
 # Routes
 
   - GET /doctors
   - GET /doctors/<int:id>
   - POST /doctors
+  - GET /patients/<int:id>
   - PATCH /patients/<int:id>
+  - POST /appointments
   - DELETE /appointments/<int:id>
     
 
@@ -51,7 +52,7 @@
           appointments: [
             {
                 id
-                date
+                day
                 patient: {
                     id
                     name
@@ -60,6 +61,20 @@
           ]
       }
   ]
+  ```
+  - GET /patients/<int:id>
+    ```json
+      {
+          id
+          name
+          doctors: [
+            {
+                id
+                name
+                specialty
+            }
+          ]
+      }
   ```
   - POST /doctors
   ```json
@@ -74,5 +89,20 @@
       {
           id
           name
+      }
+  ```
+  - POST /appointments
+    ```json
+      {
+        id
+        doctor: {
+            id
+            name
+            specialty
+        }
+        patient: {
+            id
+            name
+        }
       }
   ```

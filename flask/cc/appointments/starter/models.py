@@ -3,7 +3,7 @@ from sqlalchemy import MetaData
 from sqlalchemy.orm import validates
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy_serializer import SerializerMixin
-import string
+import string, datetime
 
 metadata = MetaData(
     naming_convention={
@@ -12,16 +12,21 @@ metadata = MetaData(
 )
 db = SQLAlchemy(metadata=metadata)
 
+
 class Patient(db.Model, SerializerMixin):
-    __tablename__ = 'patient_table'
+    __tablename__ = "patient_table"
     id = db.Column(db.Integer, primary_key=True)
-    
+
+
 class Appointment(db.Model, SerializerMixin):
-    __tablename__ = 'appointment_table'
+    __tablename__ = "appointment_table"
+
+
     id = db.Column(db.Integer, primary_key=True)
-    
 
 
 class Doctor(db.Model, SerializerMixin):
-    __tablename__ = 'doctor_table'
+    __tablename__ = "doctor_table"
+
+    id = db.Column(db.Integer, primary_key=True)
 

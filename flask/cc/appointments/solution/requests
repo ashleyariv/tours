@@ -1,0 +1,11 @@
+
+curl localhost:5555/doctors
+curl localhost:5555/doctors/1
+curl localhost:5555/patients/1
+
+curl -X POST -H "Content-Type:application/json" -d '{"name":"Dr. Baumgartner", "specialty":"Botany"}' localhost:5555/doctors
+
+curl -X PATCH -H "Content-Type:application/json" -d '{"name":"Brittleby Snapjack"}' localhost:5555/patients/1
+
+curl -X POST -H "Content-Type:application/json" -d '{"doctor_id":1, "patient_id":1,"day":"Monday"}' localhost:5555/appointments
+curl -X DELETE localhost:5555/appointments/1
