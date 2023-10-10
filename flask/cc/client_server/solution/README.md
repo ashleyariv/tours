@@ -15,60 +15,59 @@
 
   - Server
     - names must be all upper case letters
-  - Client
-    - name must be at least 5 characters and at most 15
+  - Message
+    - content must not be an empty string
 # Routes
 
   - GET /clients
   - POST /messages
+  - POST /servers
   - PATCH /messages/<int:id>
   - DELETE /messages/<int:id>
     
 
 # Response Formats
 
-  - GET /clients
-  ```json
-  [
-      {
-          id
-          name
-          servers: [
-              {
-                  id
-                  name
-              }
-          ]
-      }
-  ]
-  ```
-  - POST /messages
-  ```json
-      {
-          id
-          content
-          server: {
-              id
-              name
-          }
-          client: {
-              id
-              name
-          }
-      }
-  ```
-  - PATCH /messages/<int:id>
-  ```json
-      {
-          id
-          content
-          server: {
-              id
-              name
-          }
-          client: {
-              id
-              name
-          }
-      }
-  ```
+- GET /clients
+    ```json
+    [
+        {
+            id
+            name
+            servers: [
+                {
+                    id
+                    name
+                }
+            ]
+        }
+    ]
+    ```
+- POST /messages
+    ```json
+        {
+            id
+            content
+            server: {
+                id
+                name
+            }
+            client: {
+                id
+                name
+            }
+        }
+    ```
+- POST /servers
+    ```json
+        {
+            id
+            name
+    ```
+- PATCH /messages/<int:id>
+    ```json
+        {
+            id
+            content
+        }
+    ```

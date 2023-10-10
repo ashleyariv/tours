@@ -21,24 +21,7 @@ def index():
     return "client/server"
 
 
-@app.get("/clients")
-def get_clients():
-    return {}
 
-
-@app.post("/messages")
-def post_message():
-    return {}
-
-
-@app.patch("/messages/<int:id>")
-def patch_msg(id: int):
-    return {}
-
-
-@app.delete("/messages/<int:id>")
-def delete_msg(id: int):
-    return {}
 
 
 if __name__ == "__main__":

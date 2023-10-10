@@ -24,37 +24,59 @@ def index():
 @app.get("/clients")
 def get_clients():
     clients = Client.query.all()
-    client_json: list[dict] = []
-    for c in clients:
-        servers: list[dict] = []
-        for m in c.message_list:
-            if m.server_object not in servers:
-                servers.append(m.server_object.to_dict())
-        client_dict = c.to_dict()
-        client_dict["servers"] = servers
-        client_json.append(client_dict)
-    return make_response(jsonify(client_json), 200)
+    client_list_json = []
+    for client in clients:
+        client_dict = client.to_dict(rules=("-message_list",))
+        client_dict["servers"] = [
+            s.to_dict(rules=("-message_list",)) for s in client.servers
+        ]
+        client_list_json.append(client_dict)
+    return make_response(jsonify(client_list_json), 200)
 
 
 @app.post("/messages")
 def post_message():
     request_json = request.get_json()
     try:
+        server = db.session.get(Server, request_json.get("server_id"))
+        if not server:
+            return make_response(
+                jsonify({"error": "could not send message: invalid server"}), 405
+            )
+        client = db.session.get(Client, request_json.get("client_id"))
+        if not client:
+            return make_response(
+                jsonify({"error": "could not send message: invalid client"}), 405
+            )
+
         msg = Message(
             content=request_json.get("content"),
-            server_id=request_json.get("server_id"),
-            client_id=request_json.get("client_id"),
+            server_object=server,
+            client_object=client,
         )
         db.session.add(msg)
         db.session.commit()
-        msg_dict = msg.to_dict()
-        msg_dict["server"] = msg.server_object.to_dict()
-        msg_dict["client"] = msg.client_object.to_dict()
-        del msg_dict["server_id"]
-        del msg_dict["client_id"]
-        return make_response(jsonify(msg_dict), 202)
+
+        return make_response(
+            jsonify(msg.to_dict(rules=("-server_id", "-client_id"))), 202
+        )
     except:
-        return make_response(jsonify({"error": "invalid post"}), 405)
+        return make_response(jsonify({"error": "could not send message"}), 405)
+
+
+@app.post("/servers")
+def post_server():
+    request_json = request.get_json()
+    try:
+        server = Server(
+            name=request_json.get("name"),
+        )
+        db.session.add(server)
+        db.session.commit()
+
+        return make_response(jsonify(server.to_dict(rules=("-message_list",))), 202)
+    except:
+        return make_response(jsonify({"error": "could not instantiate server"}), 405)
 
 
 @app.patch("/messages/<int:id>")
@@ -68,14 +90,12 @@ def patch_msg(id: int):
             setattr(msg, key, request_json.get(key))
         db.session.add(msg)
         db.session.commit()
-        msg_dict = msg.to_dict()
-        msg_dict["server"] = msg.server_object.to_dict()
-        msg_dict["client"] = msg.client_object.to_dict()
-        del msg_dict["server_id"]
-        del msg_dict["client_id"]
-        return make_response(jsonify(msg_dict), 202)
+
+        return make_response(
+            jsonify(msg.to_dict(rules=("-server_object", "-client_object"))), 202
+        )
     except ValueError:
-        return make_response(jsonify({"error": "invalid patch"}), 405)
+        return make_response(jsonify({"error": "invalid message edit"}), 405)
 
 
 @app.delete("/messages/<int:id>")

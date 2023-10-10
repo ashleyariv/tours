@@ -14,16 +14,20 @@ metadata = MetaData(
 db = SQLAlchemy(metadata=metadata)
 
 
-class Server(db.Model):
+class Server(db.Model, SerializerMixin):
     __tablename__ = "server_table"
-    id = db.Column(db.Integer, primary_key = True)
+
+    id = db.Column(db.Integer, primary_key=True)
 
 
-class Message(db.Model):
+
+class Message(db.Model, SerializerMixin):
     __tablename__ = "message_table"
-    id = db.Column(db.Integer, primary_key = True)
+
+    id = db.Column(db.Integer, primary_key=True)
 
 
-class Client(db.Model):
+class Client(db.Model, SerializerMixin):
     __tablename__ = "client_table"
-    id = db.Column(db.Integer, primary_key = True)
+    id = db.Column(db.Integer, primary_key=True)
+

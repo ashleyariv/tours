@@ -1,0 +1,8 @@
+curl localhost:5555/clients
+
+curl -X POST -H "Content-Type:application/json" -d '{"server_id":1, "client_id":1,"content":"test"}' localhost:5555/messages
+curl -X POST -H "Content-Type:application/json" -d '{"name":"DLKJC"}' localhost:5555/servers
+
+curl -X PATCH -H "Content-Type:application/json" -d '{"content":"edited message"}' localhost:5555/messages/1
+
+curl -X DELETE localhost:5555/messages/2
