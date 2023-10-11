@@ -1,0 +1,9 @@
+curl localhost:5555/rights
+curl localhost:5555/rights/1
+
+
+curl -X POST -H "Content-Type:application/json" -d '{"column":"asdFC"}' localhost:5555/lefts
+
+curl -X PATCH -H "Content-Type:application/json" -d '{"column":"_+()"}' localhost:5555/middles/1
+
+curl -X DELETE localhost:5555/lefts/1

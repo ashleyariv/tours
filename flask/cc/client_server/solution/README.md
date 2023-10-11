@@ -2,7 +2,7 @@
 
  - Server
     - **id**   Integer (primary key)
-    - **name** String (unqiue, not null)
+    - **name** String (unique, not null)
  - Message
     - **id**        Integer (primary key)
     - **content**   String (not null)
@@ -10,7 +10,7 @@
     - **client_id** Integer (not null)
  - Client
     - **id**   (primary key)
-    - **name** (unqiue, not null)
+    - **name** (unique, not null)
 # Validation
 
   - Server
